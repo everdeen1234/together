@@ -317,10 +317,38 @@ footer{color:#777}
 .profile-footnote{font-size:11px;line-height:1.6;color:#777;margin-top:18px;border-top:1px solid #252525;padding-top:13px}
 @media(max-width:900px){.achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.profile-content{padding:15px}.achievement-grid{grid-template-columns:1fr}.profile-stats{gap:6px}.profile-stats>div{padding:11px 8px}.stat-caption{font-size:10px}.profile-form{grid-template-columns:1fr}.profile-form label,.profile-form input,.profile-form button{grid-column:1}.achievement-card{padding:14px}}@media(prefers-reduced-motion:reduce){.achievement-progress-fill,.trophy,.trophy:after,.trophy .cup-shine{animation:none!important;transition:none!important}}
 
+
+/* Profile navigation and separated profile/achievement pages */
+.header-left{display:flex;align-items:center;gap:22px;min-width:0}
+.profile-nav-wrap{position:relative}
+.profile-nav-trigger{display:flex;align-items:center;gap:9px;padding:7px 11px 7px 7px;background:#111;border:1px solid #333;color:#f5f5f5;border-radius:999px}
+.profile-nav-trigger:hover{background:#202020;color:#fff}
+.nav-avatar{width:30px;height:30px;display:grid;place-items:center;overflow:hidden;border-radius:50%;background:#e8e8e8;color:#111;font-weight:800;font-size:12px;flex:0 0 auto}
+.nav-avatar img{width:100%;height:100%;object-fit:cover}
+.nav-profile-label{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+.nav-chevron{color:#aaa;font-size:14px}
+.profile-nav-menu{position:absolute;top:calc(100% + 10px);left:0;width:190px;padding:6px;background:#0b0b0b;border:1px solid #333;border-radius:10px;box-shadow:0 16px 50px #000b;z-index:20}
+.profile-nav-menu button{display:block;width:100%;text-align:left;background:transparent;color:#eee;border-radius:6px;padding:11px 12px;font-size:12px}
+.profile-nav-menu button:hover{background:#222;color:#fff;transform:none}
+.app-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.app-tab{background:#101010;border:1px solid #333;color:#aaa;padding:11px 16px;border-radius:7px}
+.app-tab.active{background:#f5f5f5;color:#080808;border-color:#f5f5f5}
+#profilePanel,#achievementsPanel{margin-bottom:22px}
+#achievementsPanel[hidden],#profilePanel[hidden]{display:none!important}
+.profile-avatar{overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+.avatar-upload-row{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.avatar-upload-row input{display:none}
+.avatar-upload-label{display:inline-flex;align-items:center;gap:8px;border:1px solid #3a3a3a;background:#111;color:#eee;padding:10px 13px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+.avatar-upload-label:hover{background:#222}
+.avatar-help{font-size:10px;color:#888;line-height:1.5}
+.profile-form .profile-save-row{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:650px){.header-left{gap:10px}.brand{font-size:16px;gap:7px}.brand .logo{width:31px;height:31px}.nav-profile-label{display:none}.profile-nav-trigger{padding-right:8px}.header-actions{gap:6px}.status{max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+
 </style>
 </head>
 <body>
-<header><div class="brand"><div class="logo">↗</div>rave<span>together</span></div><div class="header-actions"><button class="header-login" id="headerLogin" type="button">Войти <span>↗</span></button><div class="status" id="status">Не авторизован</div></div></header>
+<header><div class="header-left"><div class="brand"><div class="logo">↗</div>rave<span>together</span></div><div class="profile-nav-wrap" id="profileNavWrap" hidden><button class="profile-nav-trigger" id="profileNavTrigger" type="button" aria-expanded="false" aria-controls="profileNavMenu"><span class="nav-avatar" id="navAvatar">R</span><span class="nav-profile-label" id="navProfileLabel">Профиль</span><span class="nav-chevron">⌄</span></button><div class="profile-nav-menu" id="profileNavMenu" hidden><button type="button" data-app-tab="profile">Мой профиль</button><button type="button" data-app-tab="achievements">Достижения</button></div></div></div><div class="header-actions"><button class="header-login" id="headerLogin" type="button">Войти <span>↗</span></button><div class="status" id="status">Не авторизован</div></div></header>
 
 <div class="page-transition" id="pageTransition" aria-hidden="true">
   <div class="transition-inner">
@@ -408,9 +436,13 @@ footer{color:#777}
  <div class="panelhead" id="activeRoomHeader"><div><h2 id="activeRoomName">Нет активной комнаты</h2><div class="sub" id="activeRoomSub">Создай комнату или введи код</div></div><div class="row wrap"><button class="secondary" id="copyLinkBtn" disabled>Копировать приглашение</button><button class="danger" id="leaveRoomBtn" disabled>Покинуть</button></div></div>
 </section>
 
+ <nav class="app-tabs" id="appTabs" aria-label="Разделы аккаунта">
+  <button type="button" class="app-tab active" data-app-tab="profile">Профиль</button>
+  <button type="button" class="app-tab" data-app-tab="achievements">Достижения</button>
+ </nav>
  <section class="panel profile-panel" id="profilePanel">
   <div class="panelhead">
-   <div><h2>Профиль и достижения</h2><div class="sub">Настрой свой профиль и собирай трофеи за совместные просмотры</div></div>
+   <div><h2>Мой профиль</h2><div class="sub">Информация, которую видят другие участники</div></div>
    <button class="secondary" id="profileEditToggle" type="button">Редактировать профиль</button>
   </div>
   <div class="profile-content">
@@ -421,17 +453,27 @@ footer{color:#777}
    <form id="profileForm" class="profile-form" hidden>
     <label for="profileNameInput">Имя пользователя</label><input id="profileNameInput" maxlength="24" placeholder="Как тебя называть?">
     <label for="profileBioInput">О себе</label><input id="profileBioInput" maxlength="100" placeholder="Пара слов о себе">
-    <label for="profileAvatarInput">Буква или эмодзи аватара</label><input id="profileAvatarInput" maxlength="4" placeholder="Например, ✨">
-    <button type="submit">Сохранить профиль</button>
+    <div class="avatar-upload-row">
+     <label class="avatar-upload-label" for="profileAvatarFile">↑ Загрузить аватарку</label>
+     <input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+     <span class="avatar-help">PNG, JPG, WEBP или GIF. Изображение будет уменьшено и сохранено в профиле.</span>
+    </div>
+    <label for="profileAvatarInput">Или буква / эмодзи вместо фото</label><input id="profileAvatarInput" maxlength="4" placeholder="Например, ✨">
+    <div class="profile-save-row"><button type="submit">Сохранить профиль</button><button type="button" class="secondary" id="profileEditCancel">Отмена</button></div>
    </form>
+  </div>
+ </section>
+ <section class="panel profile-panel" id="achievementsPanel" hidden>
+  <div class="panelhead"><div><h2>Достижения</h2><div class="sub">Собирай трофеи за совместные просмотры</div></div><span class="pill">12 серий · 3 уровня</span></div>
+  <div class="profile-content">
    <div class="profile-stats">
     <div><span class="stat-number" id="totalWatchHours">0 ч</span><span class="stat-caption">Время просмотра</span></div>
-    <div><span class="stat-number" id="earnedCount">0/12</span><span class="stat-caption">Получено достижений</span></div>
+    <div><span class="stat-number" id="earnedCount">0/36</span><span class="stat-caption">Получено уровней</span></div>
     <div><span class="stat-number" id="totalViews">0</span><span class="stat-caption">Запущено видео</span></div>
    </div>
-   <div class="achievement-heading"><div><h3>Коллекция трофеев</h3><p>У каждого достижения три ступени: бронза, серебро и золото.</p></div><span class="pill">12 серий</span></div>
+   <div class="achievement-heading"><div><h3>Коллекция трофеев</h3><p>У каждого достижения три ступени: бронза, серебро и золото.</p></div></div>
    <div class="achievement-grid" id="achievementGrid"></div>
-   <div class="profile-footnote">Статистика профиля сохраняется в этом браузере для текущего аккаунта. Время просмотра считается, пока видео воспроизводится на этой странице; для точного учёта между устройствами понадобится таблица статистики и политики RLS в Supabase.</div>
+   <div class="profile-footnote">Статистика достижений сохраняется отдельно для каждого аккаунта в этом браузере.</div>
   </div>
  </section>
 
@@ -471,15 +513,11 @@ function mountPlayer(id,announce=true){pendingVideo=id;currentVideoId=id;$("vide
 }
 function broadcast(event,payload){if(roomChannel)roomChannel.send({type:"broadcast",event,payload:{...payload,from:user.id,nick:profileName,ts:Date.now()}})}
 function remote(p,event){if(!p||p.from===user?.id)return;if(event==="video"){mountPlayer(p.videoId,false);return}if(!player)return;window._remoteApply=true;try{if(typeof p.at==="number"&&Math.abs((player.getCurrentTime()||0)-p.at)>2)player.seekTo(p.at,true);if(p.action==="play")player.playVideo();if(p.action==="pause")player.pauseVideo()}catch(e){}setTimeout(()=>window._remoteApply=false,800)}
-async function signUp(){const email=$("email").value.trim(),password=$("password").value;if(password.length<6)return say("Пароль должен быть не короче 6 символов.");const {error}=await db.auth.signUp({email,password});if(error)return say(error.message);say("Регистрация отправлена. Если включено подтверждение email, проверь почту, затем войди.")}
-async function signIn(){const {data,error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)return say(error.message);user=data.user;profileName=$("nickname").value.trim()||"Гость";loadProfileData();showAuth();status("Вошёл: "+user.email);clearSay();const params=new URLSearchParams(location.search);if(params.get("room")){const {data:r}=await db.from("rooms").select("*").eq("code",params.get("room").toUpperCase()).maybeSingle();if(r)await enterRoom(r)}}
+async function signUp(){const email=$("email").value.trim(),password=$("password").value,uname=($("nickname").value.trim()||email.split("@")[0]||"watcher").toLowerCase().replace(/[^a-z0-9_]/g,"_").slice(0,24);if(password.length<6)return say("Пароль должен быть не короче 6 символов.");const {error}=await db.auth.signUp({email,password,options:{data:{username:uname,display_name:$("nickname").value.trim()||uname}}});if(error)return say(error.message);say("Регистрация отправлена. Если включено подтверждение email, проверь почту, затем войди.")}
+async function signIn(){const {data,error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)return say(error.message);user=data.user;profileName=user.user_metadata?.display_name||user.user_metadata?.username||"Гость";await loadProfileData();showAuth();setAppTab(location.hash==="#achievements"?"achievements":"profile");status("Вошёл: "+user.email);clearSay();const params=new URLSearchParams(location.search);if(params.get("room")){const {data:r}=await db.from("rooms").select("*").eq("code",params.get("room").toUpperCase()).maybeSingle();if(r)await enterRoom(r)}}
 function showAuth(){
- const logged=!!user;
- $("authScreen").hidden=logged;
- $("app").hidden=!logged;
- $("roomPanel").classList.toggle("hide",!logged);
- if(logged){status("Вошёл: "+user.email);$("app").scrollIntoView({behavior:"smooth",block:"start"});}
- else status("Не авторизован");
+ const logged=!!user;$("authScreen").hidden=logged;$("app").hidden=!logged;$("roomPanel").classList.toggle("hide",!logged);$("profileNavWrap").hidden=!logged;
+ if(logged){status("Вошёл: "+user.email);syncProfileNav();$("app").scrollIntoView({behavior:"smooth",block:"start"})}else status("Не авторизован");
 }
 async function enterRoom(r){if(!user)return say("Сначала войди в аккаунт.");if(roomChannel)await db.removeChannel(roomChannel);if(dbChatChannel)await db.removeChannel(dbChatChannel);if(queueChannel)await db.removeChannel(queueChannel);room=r;history.replaceState(null,"",location.pathname+"?room="+r.code);$("activeRoomName").textContent=r.name;$("activeRoomSub").textContent="Код приглашения: "+r.code;$("copyLinkBtn").disabled=false;$("leaveRoomBtn").disabled=false;$("nextVideoBtn").disabled=false;$("voiceBtn").disabled=false;$("chatInput").disabled=false;$("sendBtn").disabled=false;
  const {error:memErr}=await db.from("room_members").upsert({room_id:r.id,user_id:user.id,nickname:profileName},{onConflict:"room_id,user_id"});if(memErr)say("Не удалось записать участника: "+memErr.message);
@@ -675,8 +713,13 @@ $("signupBtn").onclick=()=>setAuthMode("signup");
 $("loginTab").onclick=()=>setAuthMode("login");$("registerTab").onclick=()=>setAuthMode("signup");
 $("headerLogin").onclick=()=>openAuth("login");
 $("heroCta").onclick=e=>{e.preventDefault();openAuth("signup")};
-$("authHome").onclick=e=>{e.preventDefault();$("authScreen").hidden=true;$("app").hidden=true;history.replaceState(null,"",location.pathname);$("top").scrollIntoView({behavior:"smooth"})};$("createRoomBtn").onclick=createRoom;$("joinRoomBtn").onclick=joinRoom;$("leaveRoomBtn").onclick=leaveRoom;$("copyLinkBtn").onclick=copyInvite;$("nextVideoBtn").onclick=nextVideo;$("videoForm").onsubmit=e=>{e.preventDefault();addQueue($("videoUrl").value)};$("chatForm").onsubmit=sendChat;$("voiceBtn").onclick=voiceStart;$("logoutBtn").onclick=async()=>{await leaveRoom();await db.auth.signOut();user=null;showAuth();status("Не авторизован")};
+$("authHome").onclick=e=>{e.preventDefault();$("authScreen").hidden=true;$("app").hidden=true;history.replaceState(null,"",location.pathname);$("top").scrollIntoView({behavior:"smooth"})};$("createRoomBtn").onclick=createRoom;$("joinRoomBtn").onclick=joinRoom;$("leaveRoomBtn").onclick=leaveRoom;$("copyLinkBtn").onclick=copyInvite;$("nextVideoBtn").onclick=nextVideo;$("videoForm").onsubmit=e=>{e.preventDefault();addQueue($("videoUrl").value)};$("chatForm").onsubmit=sendChat;$("voiceBtn").onclick=voiceStart;$("logoutBtn").onclick=async()=>{await leaveRoom();await db.auth.signOut();user=null;profileAvatarData="";showAuth();syncProfileNav();status("Не авторизован")};
 
+/* Separate profile and achievements tabs, also reachable from the top-left profile menu */
+function setAppTab(tab){const isProfile=tab!=="achievements";$("profilePanel").hidden=!isProfile;$("achievementsPanel").hidden=isProfile;document.querySelectorAll("[data-app-tab]").forEach(b=>b.classList.toggle("active",b.dataset.appTab===tab));$("profileNavMenu").hidden=true;$("profileNavTrigger").setAttribute("aria-expanded","false");if(user)history.replaceState(null,"",location.pathname+(location.search||"")+(tab==="achievements"?"#achievements":"#profile"))}
+$("profileNavTrigger").onclick=()=>{const menu=$("profileNavMenu"),open=menu.hidden;menu.hidden=!open;$("profileNavTrigger").setAttribute("aria-expanded",String(open))};
+document.querySelectorAll("[data-app-tab]").forEach(b=>b.addEventListener("click",()=>setAppTab(b.dataset.appTab)));
+document.addEventListener("click",e=>{if(!$("profileNavWrap").contains(e.target)){$("profileNavMenu").hidden=true;$("profileNavTrigger").setAttribute("aria-expanded","false")}});
 /* Account-keyed profile and achievement tracking */
 const achievementDefs=[
 {id:"watch",title:"Киноман",desc:"Суммарное время просмотра",metric:"hours",unit:"ч",levels:[10,50,100]},
@@ -692,16 +735,39 @@ const achievementDefs=[
 {id:"explorer",title:"Исследователь",desc:"Запускай разные видео",metric:"unique",unit:"видео",levels:[10,50,200]},
 {id:"together",title:"Вместе лучше",desc:"Смотри видео в комнате",metric:"sharedHours",unit:"ч вместе",levels:[5,25,100]}
 ];
-let profileStats=null,profileEditOpen=false,lastWatchAt=0,watchTick=null;
+let profileStats=null,profileEditOpen=false,lastWatchAt=0,watchTick=null,profileAvatarData="",profileUsername="";
 function defaultStats(){return {hours:0,views:0,rooms:0,messages:0,queued:0,days:[],dayHours:{},nightHours:0,created:0,invites:0,uniqueIds:[],unique:0,sharedHours:0}}
 function statsKey(){return "rt_profile_stats_"+(user?.id||"guest")}
 function profileKey(){return "rt_profile_data_"+(user?.id||"guest")}
-function loadProfileData(){
+async function loadProfileData(){
  try{profileStats={...defaultStats(),...JSON.parse(localStorage.getItem(statsKey())||"{}")}}catch(e){profileStats=defaultStats()}
- let p={name:profileName||"Гость",bio:"Собираю общие моменты.",avatar:"R"};
+ let p={name:profileName||"Гость",bio:"Собираю общие моменты.",avatar:"R",avatar_url:""};
  try{p={...p,...JSON.parse(localStorage.getItem(profileKey())||"{}")}}catch(e){}
- profileName=p.name||"Гость";$("profileNameInput").value=p.name;$("profileBioInput").value=p.bio;$("profileAvatarInput").value=p.avatar;
- $("profileDisplayName").textContent=p.name;$("profileHandle").textContent="@"+(user?.email?.split("@")[0]||"watcher");$("profileBio").textContent=p.bio||"Пока без описания";$("profileAvatar").textContent=p.avatar||"R";renderAchievements();
+ if(user&&db){
+  try{
+   const {data,error}=await db.from("profiles").select("username,display_name,avatar_url,bio").eq("id",user.id).maybeSingle();
+   if(!error&&data){profileUsername=data.username||"";p.name=data.display_name||data.username||p.name;p.bio=data.bio??p.bio;p.avatar_url=data.avatar_url||p.avatar_url;if(data.avatar_url&&data.avatar_url.startsWith("data:image/"))p.avatar=""}
+  }catch(e){console.warn("Profile load",e)}
+ }
+ profileName=p.name||"Гость";profileAvatarData=p.avatar_url||"";
+ $("profileNameInput").value=p.name||"";$("profileBioInput").value=p.bio||"";$("profileAvatarInput").value=p.avatar||"";
+ $("profileDisplayName").textContent=p.name||"Гость";$("profileHandle").textContent="@"+(user?.email?.split("@")[0]||"watcher");$("profileBio").textContent=p.bio||"Пока без описания";
+ renderAvatar();syncProfileNav();renderAchievements();
+}
+function renderAvatar(){
+ const avatar=$("profileAvatar"),nav=$("navAvatar");if(!avatar||!nav)return;
+ if(profileAvatarData&&profileAvatarData.startsWith("data:image/")){avatar.innerHTML='<img src="'+profileAvatarData+'" alt="Аватар профиля">';nav.innerHTML='<img src="'+profileAvatarData+'" alt="">'}
+ else{const fallback=$("profileAvatarInput")?.value?.trim()||"R";avatar.textContent=fallback;nav.textContent=fallback}
+}
+function syncProfileNav(){const wrap=$("profileNavWrap");if(!wrap)return;wrap.hidden=!user;$("navProfileLabel").textContent=profileName||"Профиль";renderAvatar()}
+async function prepareAvatar(file){
+ if(!file)return "";
+ if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type))throw new Error("Выбери изображение PNG, JPG, WEBP или GIF.");
+ if(file.size>2*1024*1024)throw new Error("Размер аватарки должен быть не больше 2 МБ.");
+ const dataUrl=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error("Не удалось прочитать изображение."));reader.readAsDataURL(file)});
+ if(file.type==="image/gif")return dataUrl;
+ const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error("Файл изображения повреждён."));im.src=dataUrl});
+ const canvas=document.createElement("canvas"),max=320,scale=Math.min(1,max/Math.max(img.width,img.height));canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);return canvas.toDataURL("image/jpeg",.82);
 }
 function saveStats(){try{localStorage.setItem(statsKey(),JSON.stringify(profileStats))}catch(e){}renderAchievements()}
 function tierFor(v,l){return v>=l[2]?3:v>=l[1]?2:v>=l[0]?1:0}
@@ -742,8 +808,18 @@ function renderAchievements(){
  }).join("");
  $("earnedCount").textContent=earned+"/"+(achievementDefs.length*3);
 }
-$("profileEditToggle").onclick=()=>{profileEditOpen=!profileEditOpen;$("profileForm").hidden=!profileEditOpen;$("profileEditToggle").textContent=profileEditOpen?"Отмена":"Редактировать профиль"};
-$("profileForm").onsubmit=e=>{e.preventDefault();const p={name:$("profileNameInput").value.trim()||"Гость",bio:$("profileBioInput").value.trim(),avatar:$("profileAvatarInput").value.trim()||"R"};try{localStorage.setItem(profileKey(),JSON.stringify(p))}catch(e){}profileName=p.name;$("profileDisplayName").textContent=p.name;$("profileHandle").textContent="@"+(user?.email?.split("@")[0]||"watcher");$("profileBio").textContent=p.bio||"Пока без описания";$("profileAvatar").textContent=p.avatar;profileEditOpen=false;$("profileForm").hidden=true;$("profileEditToggle").textContent="Редактировать профиль";if(roomChannel)roomChannel.track({id:user.id,nick:profileName});say("Профиль сохранён.");setTimeout(clearSay,1800)};
+$("profileEditToggle").onclick=()=>{profileEditOpen=!profileEditOpen;$("profileForm").hidden=!profileEditOpen;$("profileEditToggle").textContent=profileEditOpen?"Скрыть редактирование":"Редактировать профиль"};
+$("profileEditCancel").onclick=()=>{profileEditOpen=false;$("profileForm").hidden=true;$("profileEditToggle").textContent="Редактировать профиль";$("profileAvatarFile").value="";loadProfileData()};
+$("profileAvatarFile").addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;try{profileAvatarData=await prepareAvatar(file);renderAvatar();say("Аватарка выбрана. Нажми «Сохранить профиль», чтобы сохранить изменения.")}catch(err){e.target.value="";say(err.message)}});
+$("profileForm").onsubmit=async e=>{
+ e.preventDefault();const p={name:$("profileNameInput").value.trim()||"Гость",bio:$("profileBioInput").value.trim(),avatar:$("profileAvatarInput").value.trim()||"R",avatar_url:profileAvatarData};
+ try{
+  if(user&&db){const username=profileUsername||(user.user_metadata?.username||("user_"+user.id.slice(0,8))).toLowerCase().replace(/[^a-z0-9_]/g,"_").slice(0,24);const {error}=await db.from("profiles").upsert({id:user.id,username,display_name:p.name,avatar_url:p.avatar_url||null,bio:p.bio,updated_at:new Date().toISOString()},{onConflict:"id"});if(error)throw error}
+  try{localStorage.setItem(profileKey(),JSON.stringify(p))}catch(err){}
+  profileName=p.name;$("profileDisplayName").textContent=p.name;$("profileHandle").textContent="@"+(user?.email?.split("@")[0]||"watcher");$("profileBio").textContent=p.bio||"Пока без описания";if(!p.avatar_url)profileAvatarData="";renderAvatar();syncProfileNav();
+  profileEditOpen=false;$("profileForm").hidden=true;$("profileEditToggle").textContent="Редактировать профиль";$("profileAvatarFile").value="";if(roomChannel)roomChannel.track({id:user.id,nick:profileName});say("Профиль сохранён.");setTimeout(clearSay,2200);
+ }catch(err){say("Не удалось сохранить профиль в Supabase: "+(err.message||err))}
+};
 function trackWatch(){if(watchTick)clearInterval(watchTick);watchTick=setInterval(()=>{if(!user||!player||!window.YT||!player.getPlayerState||player.getPlayerState()!==YT.PlayerState.PLAYING){lastWatchAt=0;return}const now=Date.now();if(lastWatchAt&&now-lastWatchAt<20000){const delta=(now-lastWatchAt)/3600000,d=new Date(),day=d.toISOString().slice(0,10);profileStats.hours+=delta;if(!profileStats.days.includes(day))profileStats.days.push(day);profileStats.dayHours[day]=(profileStats.dayHours[day]||0)+delta;if(d.getHours()>=22||d.getHours()<5)profileStats.nightHours+=delta;if(room)profileStats.sharedHours+=delta;saveStats()}lastWatchAt=now},15000)}
 const _mountPlayerStats=mountPlayer;mountPlayer=function(id,announce=true){const changed=id!==currentVideoId;_mountPlayerStats(id,announce);if(changed&&profileStats){profileStats.views++;if(!profileStats.uniqueIds.includes(id))profileStats.uniqueIds.push(id);profileStats.unique=profileStats.uniqueIds.length;saveStats()}};
 const _enterRoomStats=enterRoom;enterRoom=async function(r){const before=room?.id;await _enterRoomStats(r);if(r&&before!==r.id&&profileStats){profileStats.rooms++;saveStats()}};
@@ -757,7 +833,7 @@ loadYT();
 (async()=>{
  const {data}=await db.auth.getSession();
  if(data.session){
-  user=data.session.user;profileName="Гость";loadProfileData();showAuth();
+  user=data.session.user;profileName=user.user_metadata?.display_name||user.user_metadata?.username||"Гость";await loadProfileData();showAuth();setAppTab(location.hash==="#achievements"?"achievements":"profile");
   const p=new URLSearchParams(location.search).get("room");
   if(p){const {data:r}=await db.from("rooms").select("*").eq("code",p.toUpperCase()).maybeSingle();if(r)await enterRoom(r)}
  }else{
